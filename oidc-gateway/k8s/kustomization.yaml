@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: oauth
+
+secretGenerator:
+- name: github-oauth-credentials
+  envs:
+  - secrets/github-oauth-credentials.txt
+  type: Opaque
+
+configMapGenerator:
+- name: application-configmap
+  files:
+  - application.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+- namespace.yaml
+- deployment.yaml
+- service.yaml

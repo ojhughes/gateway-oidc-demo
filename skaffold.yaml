@@ -1,0 +1,27 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: ojhughes/oauth-gateway-k8s
+    context: oidc-gateway
+    buildpacks:
+      builder: gcr.io/paketo-buildpacks/builder:base-platform-api-latest
+      dependencies:
+        paths:
+        - src
+        - build.gradle
+  - image: ojhughes/secured-upstream-k8s
+    context: secured-upstream-service
+    buildpacks:
+      builder: gcr.io/paketo-buildpacks/builder:base-platform-api-latest
+      dependencies:
+        paths:
+        - src
+        - build.gradle
+deploy:
+  kustomize:
+    paths:
+    - oidc-gateway/k8s
+    - secured-upstream-service/k8s

@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    gateway:
+      enabled: true
+      routes:
+      - id: resource
+        uri: http://animal-rescue-backend
+        predicates:
+        - Path=/rescue
+        filters:
+        - TokenRelay=
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,beans,configprops,mappings,conditions,env
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.cloud: DEBUG

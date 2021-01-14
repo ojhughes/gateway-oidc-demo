@@ -1,0 +1,4 @@
+rootProject.name = 'gateway-demo-oidc'
+include 'oidc-gateway'
+include 'secured-upstream-service'
+

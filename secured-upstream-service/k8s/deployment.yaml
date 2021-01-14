@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secured-upstream
+  namespace: oidc
+  labels:
+    app: secured-upstream
+spec:
+  selector:
+    matchLabels:
+      app: secured-upstream
+  replicas: 1
+  template:
+    metadata:
+      name: secured-upstream
+      labels:
+        app: secured-upstream
+    spec:
+      containers:
+      - name: secured-upstream
+        image: ojhughes/secured-upstream-k8s
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+      restartPolicy: Always
+

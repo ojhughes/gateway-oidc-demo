@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth-gateway
+  labels:
+    app: oauth-gateway
+spec:
+  selector:
+    matchLabels:
+      app: oauth-gateway
+  replicas: 1
+  template:
+    metadata:
+      name: oauth-gateway
+      labels:
+        app: oauth-gateway
+    spec:
+      containers:
+      - name: oauth-gateway
+        image: ojhughes/oauth-gateway-k8s
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+        env:
+        - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-oauth-credentials
+              key: client-id
+        - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: github-oauth-credentials
+              key: client-secret
+        - name: SPRING_CONFIG_LOCATION
+          value: /config/rescue/application.yaml
+
+        volumeMounts:
+        - name: application-config-volume
+          mountPath: /config/rescue/
+      volumes:
+      - name: "application-config-volume"
+        configMap:
+          name: "application-configmap"
